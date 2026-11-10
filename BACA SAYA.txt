@@ -1,0 +1,81 @@
+CMP — CORAL MARINE PHOTOGRAMMETRY - WINDOWS
+
+1. Ekstrak semua file ZIP ke satu folder.
+2. Jalankan Buat Orthomosaic.cmd. Klik Video untuk memilih video,
+   atau Foto Frames untuk membuat satu orthomosaic dari kumpulan foto.
+   Untuk Foto Frames, pilih
+   minimal 3 JPEG, PNG, atau TIFF yang saling bertumpang tindih.
+   Gunakan Ctrl atau Shift untuk memilih lebih dari satu file.
+   Anda juga bisa menyeret file ke Buat Orthomosaic.cmd.
+3. Periksa folder hasil, lalu klik Mulai. Lokasi awal adalah folder
+   file sumber. Jika Windows menolak akses, pilih folder hasil lain.
+   Untuk video atau foto frame, pilih Akurasi pencocokan (Low, Medium,
+   High, Highest). Medium adalah setelan bawaan. Pilihan berlaku untuk
+   pekerjaan yang membuat orthomosaic dan tidak mengubah Auto Tone.
+4. Pantau progres total dan bar setiap tahap di panel Timeline. Persentase
+   total dihitung dari porsi tahap, bukan perkiraan waktu tersisa. Tahap
+   aktif tanpa angka dari mesin pemrosesan memakai bar bergerak. Tahap
+   selesai menampilkan durasi. Setelah selesai, geser garis
+   pada pratinjau di panel tengah untuk membandingkan hasil Auto Tone.
+   Gunakan tombol +/-, roda mouse, atau tombol Pas untuk mengatur zoom
+   dari 50% hingga 1.000%. Angka 100% berarti gambar pas di panel.
+   Roda mouse memperbesar atau memperkecil di sekitar posisi kursor.
+   Seret gambar untuk menggesernya. Penggeser bawah mengatur pembanding.
+   Klik Auto Tone Gambar untuk melihat PNG hasil koreksi warna secara
+   penuh. Klik Bandingkan untuk kembali ke tampilan sebelum/sesudah.
+5. Panel Iterasi proses mengikuti tahap aktif. Gunakan panah untuk membuka
+   tahap lain atau klik Ikuti proses untuk kembali mengikuti tahap aktif.
+   Panel menampilkan rincian yang tersedia di proses.log dan metashape.log.
+   Tombol di bagian bawah panel membuka gambar asli, PNG hasil,
+   folder hasil, atau log.
+
+Saat baru dibuka, Timeline memperlihatkan pratinjau delapan tahap video
+dengan progres 0%. Foto frame dimulai dari tahap 2 sampai 8 dan disalin
+ke folder frames pada hasil agar proyek Metashape bisa dibuka kembali.
+Tombol Auto Tone Gambar di pratinjau menggunakan PNG yang sudah dihasilkan
+oleh pekerjaan terpilih.
+
+Antrean memproses file satu per satu sesuai urutan yang tampil. Setiap
+file mendapat subfolder sendiri di folder hasil yang dipilih. File yang
+gagal dicatat dan antrean lanjut ke file berikutnya. Gunakan tombol
+Antrean untuk melihat status setiap file. Setelah antrean selesai, pilih
+file yang berhasil dan klik Tampilkan hasil. Panah di panel pratinjau
+berpindah antarhasil. Pratinjau, gambar asli, PNG, folder, timeline dan
+log mengikuti file yang sedang ditampilkan.
+
+Jeda menunggu tahap aktif selesai. Klik Lanjut untuk meneruskan. Berhenti
+meminta konfirmasi, lalu menghentikan pekerjaan di batas tahap dan
+membatalkan sisa antrean. Jika tahap terakhir sebuah file selesai sebelum
+jeda/berhenti berlaku, hasil file tersebut tetap disimpan. Reset
+mengosongkan sesi setelah pemrosesan berakhir dan mempertahankan folder
+tujuan serta pilihan akurasi. File hasil yang sudah tersimpan tetap ada.
+
+Input dan alur
+- Video (antara lain MP4, MOV, AVI, MKV, WEBM, WMV, 3GP, MPEG, TS, dan MXF):
+  FFmpeg mengekstrak satu
+  dari setiap 10 frame. Metashape membangun orthomosaic (Planar Top XY),
+  mengekspor TIFF, lalu FFmpeg menghasilkan PNG dengan Auto Tone adaptif.
+- Gambar (TIF, TIFF, PNG): FFmpeg menjalankan Auto Tone adaptif pada satu
+  gambar yang sudah ada dan menyimpan PNG hasilnya.
+
+Kebutuhan
+- Windows 64-bit dan Agisoft Metashape Pro berlisensi. Launcher memakai
+  Python bawaan Metashape pada lokasi instalasi standar.
+- FFmpeg diperlukan untuk video, Auto Tone, dan pratinjau. ZIP ini tidak
+  menyertakan FFmpeg. Aplikasi mencari ffmpeg\bin\ffmpeg.exe di folder
+  aplikasi, kemudian di PATH, kemudian di C:\ffmpeg\bin. Untuk angka
+  progres saat konversi video, simpan ffprobe.exe di sebelah ffmpeg.exe.
+- Untuk alur gambar saja, Python 3 dengan Tkinter yang tersedia lewat
+  perintah py juga bisa dipakai jika Metashape Pro belum terpasang.
+
+Isi folder hasil
+- orthomosaic_enhanced.png: hasil Auto Tone adaptif.
+- orthomosaic_asli.tif: ekspor asli Metashape (video).
+- proyek.psx, proyek.files, dan frames: proyek dan sumbernya (video).
+- proses.log: tahap, durasi, dan detail kegagalan.
+- metashape.log: keluaran program yang menjalankan pipeline.
+
+Folder hasil memakai akhiran _ortho untuk video atau _autotone untuk gambar.
+Percobaan berikutnya memakai nomor tambahan agar hasil sebelumnya tetap ada.
+Simpan folder frames bersama proyek Metashape jika ingin membukanya kembali.
+Untuk pengukuran panjang atau luas, validasi skala proyek dengan jarak acuan.
