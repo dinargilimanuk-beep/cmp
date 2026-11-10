@@ -1,0 +1,216 @@
+import re
+
+
+ENGLISH = {
+    "Orthomosaic Visualisasi Bawah Air Budidaya Karang Hias": "Underwater Orthomosaic Visualization for Coral Farming",
+    "Siapkan Input": "Input Setup",
+    "Sumber media": "Media source",
+    "Pengaturan hasil": "Output settings",
+    "Folder hasil": "Output folder",
+    "Ubah…": "Change…",
+    "Akurasi pencocokan": "Matching accuracy",
+    "Antrean": "Queue",
+    "Mulai": "Start",
+    "Jeda": "Pause",
+    "Lanjut": "Resume",
+    "Berhenti": "Stop",
+    "Reset": "Reset",
+    "Panduan": "Guide",
+    "Tahapan Pemrosesan": "Processing Stages",
+    "Progres total": "Overall progress",
+    "Rincian tahapan": "Stage details",
+    "Durasi (dtk)": "Duration (s)",
+    "Foto frame": "Photo frames",
+    "Gambar": "Image",
+    "Pratinjau Hasil": "Result Preview",
+    "Hasil terpilih": "Selected result",
+    "Tampilan gambar": "Image view",
+    "Pas": "Fit",
+    "Fokus Rak": "Rack Focus",
+    "Fokus Rak…": "Rack Focus…",
+    "Koreksi Geometrik": "Geometric Correction",
+    "Bandingkan": "Compare",
+    "Sebelum": "Before",
+    "Sesudah": "After",
+    "Hasil Auto Tone": "Auto Tone result",
+    "Rincian Proses": "Processing Details",
+    "Log tahapan": "Stage log",
+    "Ikuti proses": "Follow progress",
+    "Berkas hasil": "Output files",
+    "Buka log": "Open log",
+    "Gambar asli": "Original image",
+    "PNG hasil": "Output PNG",
+    "Menyiapkan PNG…": "Preparing PNG…",
+    "Tunggu sampai PNG hasil selesai disiapkan.": "Wait for the output PNG to finish saving.",
+    "PNG Auto Tone tidak dapat dibuka.": "Could not open the Auto Tone PNG.",
+    "Kanvas PNG hasil terlalu besar.": "The output PNG canvas is too large.",
+    "Apa yang ditampilkan?": "What appears here?",
+    "Catatan tiap tahap muncul saat pekerjaan berjalan. Gunakan panah untuk meninjau tahap, atau Ikuti proses untuk kembali ke tahap aktif.":
+        "Stage notes appear during processing. Use the arrows to review a stage or Follow progress to return to the active one.",
+    "Contoh alur video\nEkstraksi frame → Cocokkan foto → Ekspor orthomosaic":
+        "Example video workflow\nExtract frames → Match photos → Export orthomosaic",
+    "Pilih sumber media untuk melihat tahapan pemrosesan yang sesuai.": "Choose media to see the relevant processing stages.",
+    "Persentase menunjukkan progres tahap.": "The percentage tracks stage progress.",
+    "Durasi menunjukkan waktu yang sudah dipakai oleh tahap yang selesai.": "Duration shows the time spent on a completed stage.",
+    "Mulai dari sumber media": "Start with a media source",
+    "Pilih media di panel Siapkan Input.": "Choose media in the Input Setup panel.",
+    "Input siap diproses": "Input is ready",
+    "Periksa pengaturan hasil, lalu klik Mulai.": "Check output settings, then click Start.",
+    "Menyiapkan pratinjau": "Preparing preview",
+    "Hasil akan tampil di sini setelah gambar dibuka.": "The result will appear here once the image loads.",
+    "Sedang memproses": "Processing",
+    "Pantau progres di Tahapan Pemrosesan dan baca Log tahapan.": "Track progress in Processing Stages and read the Stage log.",
+    "Menunggu berhenti": "Waiting to stop",
+    "Tahap aktif sedang diselesaikan.": "The current stage is finishing.",
+    "Proses dijeda": "Processing paused",
+    "Klik Lanjut untuk meneruskan pemrosesan.": "Click Resume to continue.",
+    "Antrean dijeda": "Queue paused",
+    "Klik Lanjut untuk memulai file berikutnya.": "Click Resume to start the next file.",
+    "Menunggu input": "Waiting for input",
+    "Menunggu input.": "Waiting for input.",
+    "Siap diproses": "Ready to process",
+    "Siap diproses.": "Ready to process.",
+    "Menyiapkan proses…": "Preparing to process…",
+    "Dijeda.": "Paused.",
+    "Menunggu jeda di batas tahap.": "Waiting to pause at the end of the stage.",
+    "Menunggu berhenti di batas tahap.": "Waiting to stop at the end of the stage.",
+    "Selesai. PNG hasil tersimpan.": "Done. The output PNG was saved.",
+    "Proses gagal": "Processing failed",
+    "Pemrosesan gagal": "Processing failed",
+    "Pemrosesan gagal.": "Processing failed.",
+    "Proses dihentikan": "Processing stopped",
+    "Proses dihentikan.": "Processing stopped.",
+    "Menunggu": "Waiting",
+    "Berjalan": "In progress",
+    "Selesai": "Done",
+    "Gagal": "Failed",
+    "Dihentikan": "Stopped",
+    "Dibatalkan": "Canceled",
+    "Belum ada file yang dipilih.": "No file selected.",
+    "Belum ada pekerjaan": "No job yet",
+    "Belum ada hasil": "No result yet",
+    "Mengikuti folder file sumber": "Use the source folder",
+    "Pratinjau tidak tersedia": "Preview unavailable",
+    "Buka gambar melalui Berkas hasil.": "Open the image under Output files.",
+    "Pilih input untuk mengaktifkan Mulai.": "Select input to enable Start.",
+    "Jeda dan Berhenti tersedia saat proses berjalan.": "Pause and Stop are available during processing.",
+    "Jeda dan Berhenti berlaku di batas tahap.": "Pause and Stop take effect at the end of a stage.",
+    "Reset untuk memulai sesi baru.": "Reset to start a new session.",
+    "Jeda di batas tahap": "Pause at the end of the stage",
+    "Lanjutkan pemrosesan": "Resume processing",
+    "Roda mouse: zoom · Seret: geser": "Mouse wheel: zoom · Drag: pan",
+    "Rincian muncul saat tahap ini berjalan.": "Details appear when this stage runs.",
+    "Klik Mulai untuk melihat catatan pemrosesan.": "Click Start to see processing notes.",
+    "KELUARAN MESIN": "ENGINE OUTPUT",
+    "Konversi video ke frame": "Extract video frames",
+    "Buat proyek Metashape": "Create Metashape project",
+    "Cocokkan foto": "Match photos",
+    "Selaraskan kamera": "Align cameras",
+    "Buat model": "Build model",
+    "Buat orthomosaic": "Build orthomosaic",
+    "Ekspor orthomosaic TIFF": "Export orthomosaic TIFF",
+    "Auto Tone adaptif": "Adaptive Auto Tone",
+    "Buka panduan penggunaan": "Open the user guide",
+    "Pilih video, TIFF, atau PNG": "Choose video, TIFF, or PNG",
+    "Pilih minimal tiga foto yang saling bertumpang tindih": "Choose at least three overlapping photos",
+    "Mulai pemrosesan": "Start processing",
+    "Hentikan antrean di batas tahap": "Stop the queue at the end of a stage",
+    "Kosongkan sesi pemrosesan": "Clear the processing session",
+    "Hasil sebelumnya": "Previous result",
+    "Hasil berikutnya": "Next result",
+    "Perkecil gambar": "Zoom out",
+    "Perbesar gambar": "Zoom in",
+    "Paskan gambar ke panel": "Fit image to preview",
+    "Putar orthomosaic dan simpan salinan PNG": "Rotate the orthomosaic and save a PNG copy",
+    "Pembanding sebelum dan sesudah Auto Tone": "Before and after Auto Tone comparison",
+    "Geser untuk membandingkan gambar asli dan hasil Auto Tone.": "Drag to compare the original and Auto Tone result.",
+    "Tahap sebelumnya": "Previous stage",
+    "Tahap berikutnya": "Next stage",
+    "Tampilkan pembanding sebelum dan sesudah": "Show before-and-after comparison",
+    "Tampilkan gambar hasil Auto Tone": "Show the Auto Tone result",
+    "Sembunyikan area di luar pembatas rak": "Hide the area outside the rack boundary",
+    "Klik dan seret untuk membuat pembatas persegi panjang. Seret sisi atau sudut untuk mengubah ukurannya.":
+        "Click and drag to draw a rectangle. Drag an edge or corner to resize it.",
+    "Reset pembatas": "Reset boundary",
+    "Kembalikan tampilan ke seluruh gambar": "Restore the full image",
+    "Batal": "Cancel",
+    "Terapkan": "Apply",
+    "Putar seluruh gambar dengan bantuan garis vertikal. Sudut positif memutar searah jarum jam.":
+        "Rotate the whole image using the vertical guide. Positive angles rotate clockwise.",
+    "Sudut rotasi": "Rotation angle",
+    "Reset sudut": "Reset angle",
+    "Lihat sebelum rotasi": "View before rotation",
+    "PNG koreksi disimpan sebagai salinan visual.": "The corrected PNG is saved as a visual copy.",
+    "Simpan PNG…": "Save PNG…",
+    "Simpan PNG koreksi": "Save corrected PNG",
+    "Terapkan ke pratinjau": "Apply to preview",
+    "Gunakan ekstensi .png untuk salinan koreksi.": "Use the .png extension for the corrected copy.",
+    "Pilih nama lain agar berkas sumber dan hasil Auto Tone tetap tersedia.": "Choose a different name to preserve the source and Auto Tone files.",
+    "Menyimpan PNG koreksi…": "Saving corrected PNG…",
+    "PNG koreksi gagal disimpan.": "Could not save the corrected PNG.",
+    "Pilih video atau gambar": "Choose a video or image",
+    "Pilih minimal 3 foto dari area yang sama": "Choose at least three photos of the same area",
+    "Pilih sedikitnya 3 foto frame berbeda.": "Choose at least three different photo frames.",
+    "Pilih folder hasil": "Choose an output folder",
+    "FFmpeg tidak ditemukan. Tambahkan folder bin FFmpeg ke PATH, atau tempatkan folder FFmpeg di sebelah launcher.":
+        "FFmpeg was not found. Add its bin folder to PATH or place the FFmpeg folder next to the launcher.",
+    "Hentikan antrean setelah tahap aktif selesai?": "Stop the queue after the active stage finishes?",
+    "Antrean Pemrosesan": "Processing Queue",
+    "Tampilkan hasil": "Show result",
+    "Tunggu sampai proses berakhir atau hentikan antrean sebelum menutup.": "Wait for processing to finish or stop the queue before closing.",
+    "Panduan Penggunaan": "User Guide",
+    "Pilih sumber media": "Choose a media source",
+    "Klik Video untuk memilih satu atau beberapa video. Klik Foto Frames untuk memilih sedikitnya tiga foto yang saling bertumpang tindih.":
+        "Click Video to choose one or more videos. Click Photo Frames to choose at least three overlapping photos.",
+    "Atur penyimpanan dan akurasi": "Set output location and accuracy",
+    "Klik Ubah untuk menentukan folder hasil. Jika tidak diubah, aplikasi memakai folder file sumber pertama. Untuk video atau Foto Frames, pilih akurasi pencocokan sesuai kebutuhan.":
+        "Click Change to choose an output folder. The default is the first source file's folder. For videos or photo frames, select the matching accuracy you need.",
+    "Mulai dan pantau pemrosesan": "Start and monitor processing",
+    "Klik Mulai. File dalam antrean diproses berurutan. Lihat progres di Tahapan Pemrosesan dan detailnya di Log tahapan. Jeda dan Berhenti berlaku di batas tahap.":
+        "Click Start. Queued files are processed in order. Track progress in Processing Stages and check the Stage log. Pause and Stop take effect at the end of a stage.",
+    "Tinjau hasil gambar": "Review the result",
+    "Gunakan panah di Hasil terpilih atau tombol Antrean untuk memilih hasil. Roda mouse mengatur zoom dan seret untuk menggeser gambar. Gunakan Auto Tone atau Bandingkan untuk mengganti tampilan. Gunakan Koreksi Geometrik untuk memutar gambar, lalu Fokus Rak untuk membatasi area yang terlihat.":
+        "Use the Selected result arrows or Queue to select a result. Scroll to zoom and drag to pan. Switch views with Auto Tone or Compare. Use Geometric Correction to rotate the image, then Rack Focus to limit the visible area.",
+    "Buka berkas hasil": "Open output files",
+    "Gunakan tombol Folder hasil, Buka log, Gambar asli, atau PNG hasil di bagian Berkas hasil. PNG hasil menyertakan koreksi yang diterapkan. Klik Reset untuk memulai sesi baru.":
+        "Under Output files, open the output folder, log, original image, or output PNG. The output PNG includes the corrections you applied. Click Reset to start a new session.",
+    "Tutup": "Close",
+    "Foto Frames…": "Photo Frames…",
+}
+
+PATTERNS = tuple((re.compile(pattern), replacement) for pattern, replacement in (
+    (r"Antrean \((\d+)\)", r"Queue (\1)"),
+    (r"(\d+/\d+) tahap · (\d+%)", r"\1 stages · \2"),
+    (r"(\d+) foto frame · (.+)", r"\1 photo frames · \2"),
+    (r"(.+ · )(\d+) foto frame · (.+)", r"\1\2 photo frames · \3"),
+    (r"(?:File (\d+/\d+) · )?Memproses( \d+%)?", r"Processing\2"),
+    (r"(Selesai|Dihentikan) · (\d+/\d+) berhasil", r"\1 · \2 successful"),
+    (r"PNG koreksi tersimpan · (.+)", r"Corrected PNG saved · \1"),
+    (r"Kode keluar (\d+)\. Buka log\.", r"Exit code \1. Open the log."),
+    (r"Gagal memulai\. (.+)", r"Could not start. \1"),
+    (r"File tidak valid atau tidak didukung\.\n(.+)", r"Invalid or unsupported file.\n\1"),
+))
+
+
+def english(text):
+    if text in ENGLISH:
+        return ENGLISH[text]
+    for pattern, replacement in PATTERNS:
+        match = pattern.fullmatch(text)
+        if match:
+            if text.startswith(("Selesai ·", "Dihentikan ·")):
+                return f"{ENGLISH[match[1]]} · {match[2]} successful"
+            if "Memproses" in text and "Processing" in replacement:
+                prefix = f"File {match[1]} · " if match[1] else ""
+                return f"{prefix}Processing{match[2] or ''}"
+            return match.expand(replacement)
+    match = re.fullmatch(r"(\d+\. |\d+/\d+ · |Tahap aktif · )(.+)", text)
+    if match and match[2] in ENGLISH:
+        prefix = "Active stage · " if match[1] == "Tahap aktif · " else match[1]
+        return prefix + ENGLISH[match[2]]
+    if text.startswith(("Frame: ", "Kamera terselaras: ", "Total: ")):
+        return text.replace("Frame: ", "Frames: ").replace("Kamera terselaras: ", "Aligned cameras: ").replace(" detik", " s")
+    match = re.fullmatch(r"✓ (\d+),(\d+)", text)
+    if match:
+        return f"✓ {match[1]}.{match[2]}"
+    return text
